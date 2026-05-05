@@ -1,0 +1,1 @@
+g++ TestCases/TestCases.c++ LinkedList/*.h -o tests
