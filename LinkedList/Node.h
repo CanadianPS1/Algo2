@@ -1,6 +1,7 @@
 template <typename T>
 class Node{
     public:
+    Node(){};
     T data;
     Node<T> next;
     T GetData(){return data;}
