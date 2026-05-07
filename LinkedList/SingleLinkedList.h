@@ -5,7 +5,7 @@ template <typename T>
 class SingleLinkedList{
     private:
     int count = 0;
-    Node<T> head;
+    Node<T>* head = nullptr;
     void SetCount(int temp){count = temp;}
     public:
     int Size(){return count;}
@@ -15,14 +15,14 @@ class SingleLinkedList{
      * @param data 
      * @param priorNode 
      */
-    void Add(T data, Node<T> priorNode){
+    void Add(T data, Node<T>* priorNode = nullptr){
         if(head == nullptr){
             head = new Node<T>;
-            head.SetData(data, nullptr);
-            priorNode.SetNext(head);
+            head->SetData(data);
+            priorNode->SetNext(head);
         }else{
-            Node<T> currentNode = head;
-            while(currentNode.GetNext() != nullptr){currentNode = currentNode.GetNext();}
+            Node<T> currentNode = *head;
+            while(currentNode.GetNext() != nullptr){currentNode = *currentNode.GetNext();}
         }
         SetCount(Size() + 1);
     }
@@ -32,7 +32,7 @@ class SingleLinkedList{
      * @param index 
      * @return T 
      */
-    T Get(int index){return FindNode(index).GetData();}
+    T Get(int index){return FindNode(index)->GetData();}
     /**
      * @brief find and returns the first item in the linked list
      * 
@@ -73,20 +73,19 @@ class SingleLinkedList{
         for(index++; currentNode != nullptr; currentNode = currentNode.GetNext()) if(currentNode.GetData() == value) return index;
         return -1;
     }
-    private:
     /**
      * @brief finds a spesific node and returns it
      * 
      * @param index 
      * @return Node<T> 
      */
-    Node<T> FindNode(int index){
+    Node<T>* FindNode(int index){
         if(index < 0 || index >= count) throw std::out_of_range("Invalid Index");
         if(head == nullptr) throw std::out_of_range("Invalid Operation, head is null");
         int currentIndex = 0;
-        Node<T> currentNode = head;
+        Node<T>* currentNode = head;
         while(currentIndex != index){
-            currentNode = currentNode.GetNext();
+            currentNode = currentNode->GetNext();
             currentIndex++;
         }
         return currentNode;

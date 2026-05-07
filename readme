@@ -1,1 +1,1 @@
-g++ TestCases/TestCases.c++ LinkedList/*.h -o tests
+g++ TestCases/*.c++ External/catch_amalgamated.cpp -o tests
