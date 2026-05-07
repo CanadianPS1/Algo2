@@ -8,7 +8,7 @@ class Node{
     public:
     T GetData(){return data;}
     void SetData(T temp){data = temp;}
-    void SetNext(Node<T>* temp){next = temp;}
+    void SetNext(Node<T>* temp = nullptr){next = temp;}
     Node<T>* GetNext(){return next;}
     Node(T data, Node<T>* temp = nullptr){
         this->SetData(data);
