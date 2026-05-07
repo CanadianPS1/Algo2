@@ -53,17 +53,42 @@ class SingleLinkedList{
      */
     T Get(int index){return FindNode(index)->GetData();}
     /**
-     * @brief find and returns the first item in the linked list
+     * @brief find and deletes the first item in the linked list then returns its value
      * 
      * @return T 
      */
     T Remove(){
-        Node<T>* firstNode =  FindNode(0);
+        Node<T>* firstNode = head;
         head = head->GetNext();
-        int firstNodeValue = firstNode->GetData();
+        T firstNodeValue = firstNode->GetData();
         delete firstNode;
         count--;
         return firstNodeValue;
+    }
+    /**
+     * @brief Removes the Last element in the linked list and returns its value
+     * 
+     * @return T 
+     */
+    T RemoveLast(){
+        Node<T>* lastNode = FindNode(count - 1);
+        T lastNodeValue = lastNode->GetData();
+        delete lastNode;
+        count--;
+        return lastNodeValue;
+    }
+    /**
+     * @brief removes the indexed element and returns its value
+     * 
+     * @param index 
+     * @return T 
+     */
+    T RemoveAt(int index){
+        Node<T>* indexedNode = FindNode(index);
+        T indexedNodeValue = indexedNode->GetData();
+        delete indexedNode;
+        count--;
+        return indexedNodeValue;
     }
     /**
      * @brief creates a node at a given index
@@ -86,8 +111,10 @@ class SingleLinkedList{
      * 
      */
     void Clear(){
-        head = nullptr;
-        count = 0;
+        for(int i = count - 1; i >= 0; i--){
+            delete FindNode(i);
+            count--;
+        }
     }
     int Search(T value){
         Node<T>* currentNode = head;
