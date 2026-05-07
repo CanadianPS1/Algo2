@@ -73,6 +73,8 @@ class SingleLinkedList{
     T RemoveLast(){
         Node<T>* lastNode = FindNode(count - 1);
         T lastNodeValue = lastNode->GetData();
+        if(Size() > 2) FindNode(count - 2)->SetNext(nullptr);
+        else if(Size() == 2)
         delete lastNode;
         count--;
         return lastNodeValue;
@@ -85,6 +87,7 @@ class SingleLinkedList{
      */
     T RemoveAt(int index){
         Node<T>* indexedNode = FindNode(index);
+        if(indexedNode == head) head->GetNext();
         T indexedNodeValue = indexedNode->GetData();
         delete indexedNode;
         count--;
