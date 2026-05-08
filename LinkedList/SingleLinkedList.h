@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#pragma once
 template <typename T>
 class SingleLinkedList{
     private:
@@ -119,10 +120,14 @@ class SingleLinkedList{
      * 
      */
     void Clear(){
-        for(int i = count - 1; i >= 0; i--){
-            delete FindNode(i);
-            count--;
+        Node<T>* currentNode = head;
+        while(currentNode != nullptr) {
+            Node<T>* nextNode = currentNode->GetNext();
+            delete currentNode;
+            currentNode = nextNode;
         }
+        head = nullptr;
+        count = 0;
     }
     /**
      * @brief returns the index of the given value

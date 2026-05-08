@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <bits/stdc++.h>
+#pragma once
 template <typename T>
 class DoubleLinkedList{
     private:
@@ -20,12 +22,27 @@ class DoubleLinkedList{
      */
     Node<T>* FindNode(int index){
         if(index < 0 || index >= count) throw std::out_of_range("Invalid Index");
-        if(head == nullptr) throw std::out_of_range("Invalid Operation, head is null");
-        int currentIndex = 0;
-        Node<T>* currentNode = head;
-        while(currentIndex != index){
-            currentNode = currentNode->GetNext();
-            currentIndex++;
+        if(head == nullptr || foot == nullptr) throw std::out_of_range("Invalid Operation, head/foot is null");
+        int currentIndex;
+        Node<T>* currentNode;
+        if(index > (count - 1) / 2){
+            if(count == 0) currentIndex = 0;
+            else currentIndex = count - 1;
+            currentNode = foot;
+        }else{ 
+            currentIndex = 0;
+            currentNode = head;
+        }
+        if(currentIndex == 0){
+            while(currentIndex != index){
+                currentNode = currentNode->GetNext();
+                currentIndex++;
+            }
+        }else{
+            while(currentIndex != index){
+                currentNode = currentNode->GetPast();
+                currentIndex--;
+            }
         }
         return currentNode;
     }
@@ -41,13 +58,13 @@ class DoubleLinkedList{
         if(head == nullptr){
             head = new Node<T>;
             head->SetData(data);
-            foot = new Node<T>;
-            foot->SetData(data);
+            foot = head;
         }else{
-            Node<T>* nextNode = new Node<T>(data, nullptr);
-            Node<T>* currentNode = head;
-            while(currentNode->GetNext() != nullptr) currentNode = currentNode->GetNext();
+            Node<T>* nextNode = new Node<T>(data);
+            Node<T>* currentNode = foot;
             currentNode->SetNext(nextNode);
+            nextNode->SetPast(foot);
+            foot = nextNode;
         }
         SetCount(Size() + 1);
     }
@@ -108,11 +125,17 @@ class DoubleLinkedList{
      * @param data 
      */
     void InsertAt(int index, T data){
+        Node<T>* inserted;
         if(index == 0){
-            Node<T>* inserted = new Node<T>(data, head);
+            inserted = new Node<T>(data, head);
+            if(head == foot) foot = inserted;
             head = inserted;
+        }else if(index == count - 1){
+            inserted = new Node<T>(data, nullptr, foot);
+            if(head == foot) head == inserted;
+            foot = inserted;
         }else{
-            Node<T>* inserted = new Node<T>(data, FindNode(index + 1));
+            inserted = new Node<T>(data, FindNode(index + 1));
             FindNode(index - 1)->SetNext(inserted);
         }
         count++;
@@ -122,10 +145,15 @@ class DoubleLinkedList{
      * 
      */
     void Clear(){
-        for(int i = count - 1; i >= 0; i--){
-            delete FindNode(i);
-            count--;
+        Node<T>* currentNode = head;
+        while(currentNode != nullptr) {
+            Node<T>* nextNode = currentNode->GetNext();
+            delete currentNode;
+            currentNode = nextNode;
         }
+        head = nullptr;
+        foot = nullptr;
+        count = 0;
     }
     /**
      * @brief returns the index of the given value

@@ -2,7 +2,10 @@ template <typename T>
 #pragma once
 class Node{
     public:
-    Node() : next(nullptr){}
+    Node(){
+        next = nullptr;
+        past = nullptr;
+    }
     private:
     T data;
     Node<T>* next;

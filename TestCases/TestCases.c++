@@ -125,6 +125,14 @@ TEST_CASE("Single Linked List can search the first position"){
     singleLinkedList.Add(4);
     REQUIRE(singleLinkedList.Search(1) == 0);
 }
+TEST_CASE("Single Linked List can search for a string"){
+    SingleLinkedList<std::string> singleLinkedList;
+    singleLinkedList.Add("1");
+    singleLinkedList.Add("2");
+    singleLinkedList.Add("3");
+    singleLinkedList.Add("4");
+    REQUIRE(singleLinkedList.Search("1") == 0);
+}
 //clear
 TEST_CASE("Single Linked List can clear"){
     SingleLinkedList<int> singleLinkedList;
@@ -284,6 +292,14 @@ TEST_CASE("Double Linked List can search the first position"){
     doubleLinkedList.Add(3);
     doubleLinkedList.Add(4);
     REQUIRE(doubleLinkedList.Search(1) == 0);
+}
+TEST_CASE("Double Linked List can search for a string"){
+    DoubleLinkedList<std::string> doubleLinkedList;
+    doubleLinkedList.Add("1");
+    doubleLinkedList.Add("2");
+    doubleLinkedList.Add("3");
+    doubleLinkedList.Add("4");
+    REQUIRE(doubleLinkedList.Search("1") == 0);
 }
 //clear
 TEST_CASE("Double Linked List can clear"){
