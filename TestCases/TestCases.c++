@@ -1,11 +1,15 @@
 #include "../External/catch_amalgamated.hpp"
 #include "../LinkedList/SingleLinkedList.h"
+#include "../LinkedList/DoubleLinkedList.h"
 #include <bits/stdc++.h>
+#include <vector>
+
 /*
 
     Linked List Tests
 
 */
+
 //add
 TEST_CASE("Single Linked List can Add"){
     SingleLinkedList<int> singleLinkedList;
@@ -135,4 +139,187 @@ TEST_CASE("Single Linked List can clear an empty list"){
     SingleLinkedList<int> singleLinkedList;
     singleLinkedList.Clear();
     REQUIRE(singleLinkedList.Size() == 0);
+}
+//to string
+TEST_CASE("Single Linked List can to string a int list"){
+    SingleLinkedList<int> singleLinkedList;
+    std::vector<std::string> given;
+    std::vector<std::string> correct = {"1","2","3","4"};
+    singleLinkedList.Add(1);
+    singleLinkedList.Add(2);
+    singleLinkedList.Add(3);
+    singleLinkedList.Add(4);
+    given = singleLinkedList.ToString();
+    REQUIRE(given == correct);
+}
+TEST_CASE("Single Linked List can to string a float list"){
+    SingleLinkedList<float> singleLinkedList;
+    std::vector<std::string> given;
+    std::vector<std::string> correct = {"1.1","2.2","3.3","4.4"};
+    singleLinkedList.Add(1.1);
+    singleLinkedList.Add(2.2);
+    singleLinkedList.Add(3.3);
+    singleLinkedList.Add(4.4);
+    given = singleLinkedList.ToString();
+    REQUIRE(given == correct);
+}
+
+/*
+
+    Double Linked List
+
+*/
+
+//add
+TEST_CASE("Double Linked List can Add"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    REQUIRE(doubleLinkedList.Get(0) == 1);
+}
+TEST_CASE("Double Linked List can Add multiple values"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(3);
+    REQUIRE(doubleLinkedList.Get(2) == 3);
+}
+//get
+TEST_CASE("Double Linkled List can get when theirs 1 item"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    REQUIRE(doubleLinkedList.Get(0) == 1);
+}
+TEST_CASE("Double Linked List can get when theirs multiple items"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(3);
+    REQUIRE(doubleLinkedList.Get(2) == 3);
+}
+//size
+TEST_CASE("Double Linked List can send back the correct size for 1 item"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    REQUIRE(doubleLinkedList.Size() == 1);
+}
+TEST_CASE("Double Linked List can send back the correct size for multiple items"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(1);
+    REQUIRE(doubleLinkedList.Size() == 4);
+}
+//remove
+TEST_CASE("Double Linked List can remove the first element when theirs 1 item"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Remove();
+    REQUIRE(doubleLinkedList.Size() == 0);
+}
+TEST_CASE("Double Linked List can remove the first element when theirs multiple items"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Remove();
+    REQUIRE(doubleLinkedList.Get(0) == 2);
+}
+//remove last
+TEST_CASE("Double Linked List can remove the last element when theirs 1 item"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.RemoveLast();
+    REQUIRE(doubleLinkedList.Size() == 0);
+}
+TEST_CASE("Double Linked List can remove the last element when theirs multiple items"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.RemoveLast();
+    REQUIRE(doubleLinkedList.Get(0) == 1);
+}
+//remove at
+TEST_CASE("Double Linked List can remove the indexed element when theirs 1 item"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.RemoveAt(0);
+    REQUIRE(doubleLinkedList.Size() == 0);
+}
+TEST_CASE("Double Linked List can remove the indexed element when theirs multiple items"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(3);
+    doubleLinkedList.RemoveAt(1);
+    REQUIRE(doubleLinkedList.Get(1) == 3);
+}
+//insert
+TEST_CASE("Double Linked List can insert"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(4);
+    doubleLinkedList.Add(5);
+    doubleLinkedList.InsertAt(2,3);
+    REQUIRE(doubleLinkedList.Get(2) == 3);
+}
+TEST_CASE("Double Linked List can insert into an empty list"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.InsertAt(0,1);
+    REQUIRE(doubleLinkedList.Get(0) == 1);
+}
+//search
+TEST_CASE("Double Linked List can search the last position"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(3);
+    doubleLinkedList.Add(4);
+    REQUIRE(doubleLinkedList.Search(4) == 3);
+}
+TEST_CASE("Double Linked List can search the first position"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(3);
+    doubleLinkedList.Add(4);
+    REQUIRE(doubleLinkedList.Search(1) == 0);
+}
+//clear
+TEST_CASE("Double Linked List can clear"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(3);
+    doubleLinkedList.Add(4);
+    doubleLinkedList.Clear();
+    REQUIRE(doubleLinkedList.Size() == 0);
+}
+TEST_CASE("Double Linked List can clear an empty list"){
+    DoubleLinkedList<int> doubleLinkedList;
+    doubleLinkedList.Clear();
+    REQUIRE(doubleLinkedList.Size() == 0);
+}
+//to string
+TEST_CASE("Double Linked List can to string a int list"){
+    DoubleLinkedList<int> doubleLinkedList;
+    std::vector<std::string> given;
+    std::vector<std::string> correct = {"1","2","3","4"};
+    doubleLinkedList.Add(1);
+    doubleLinkedList.Add(2);
+    doubleLinkedList.Add(3);
+    doubleLinkedList.Add(4);
+    given = doubleLinkedList.ToString();
+    REQUIRE(given == correct);
+}
+TEST_CASE("Double Linked List can to string a float list"){
+    DoubleLinkedList<float> doubleLinkedList;
+    std::vector<std::string> given;
+    std::vector<std::string> correct = {"1.1","2.2","3.3","4.4"};
+    doubleLinkedList.Add(1.1);
+    doubleLinkedList.Add(2.2);
+    doubleLinkedList.Add(3.3);
+    doubleLinkedList.Add(4.4);
+    given = doubleLinkedList.ToString();
+    REQUIRE(given == correct);
 }

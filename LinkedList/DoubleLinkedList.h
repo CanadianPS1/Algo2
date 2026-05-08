@@ -6,10 +6,11 @@
 #include <string>
 #include <sstream>
 template <typename T>
-class SingleLinkedList{
+class DoubleLinkedList{
     private:
     int count = 0;
     Node<T>* head = nullptr;
+    Node<T>* foot = nullptr;
     void SetCount(int temp){count = temp;}
     /**
      * @brief finds a spesific node and returns it
@@ -40,6 +41,8 @@ class SingleLinkedList{
         if(head == nullptr){
             head = new Node<T>;
             head->SetData(data);
+            foot = new Node<T>;
+            foot->SetData(data);
         }else{
             Node<T>* nextNode = new Node<T>(data, nullptr);
             Node<T>* currentNode = head;
