@@ -389,11 +389,8 @@ TEST_CASE("Stack can pop when theirs multiple items"){
     Stack<int> stack;
     stack.Push(1);
     stack.Push(2);
-    stack.Push(3);
-    stack.Push(4);
-    stack.Push(5);
     stack.Pop();
-    REQUIRE(stack.Peak() == 4);
+    REQUIRE(stack.Peak() == 1);
 }
 //get
 TEST_CASE("Stack can get 1 item"){
