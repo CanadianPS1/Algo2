@@ -3,6 +3,7 @@
 #include "../LinkedList/DoubleLinkedList.h"
 #include "../Stack/Stack.h"
 #include "../Queue/Queue.h"
+#include "../BinarySearchTree/BinarySearchTree.h"
 #include <bits/stdc++.h>
 #include <vector>
 
@@ -534,4 +535,40 @@ TEST_CASE("Queue can check the size when the list contains multiple items"){
     queue.Enqueue(4);
     queue.Enqueue(5);
     REQUIRE(queue.Size() == 5);
+}
+
+/*
+
+    Binary Search Tree
+
+*/
+
+//add
+TEST_CASE("Binary Search Tree can Add 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    REQUIRE(true);
+}
+TEST_CASE("Binary Search Tree can Add multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(true);
+}
+
+//count
+TEST_CASE("Binary Search Tree size works with 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.Size() == 1);
+}
+TEST_CASE("Binary Search Tree size works with multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.Size() == 4);
 }
