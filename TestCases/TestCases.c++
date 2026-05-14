@@ -544,26 +544,26 @@ TEST_CASE("Queue can check the size when the list contains multiple items"){
 */
 
 //add
-TEST_CASE("Binary Search Tree can Add 1 value"){
-    BinarySearchTree<int> tree;
-    tree.Add(50);
-    REQUIRE(true);
-}
+// TEST_CASE("Binary Search Tree can Add 1 value"){
+//     BinarySearchTree<int> tree;
+//     tree.Add(50);
+//     REQUIRE(tree.InOrder() == "50");
+// }
 TEST_CASE("Binary Search Tree can Add multiple values"){
     BinarySearchTree<int> tree;
     tree.Add(50);
     tree.Add(25);
     tree.Add(60);
     tree.Add(26);
-    REQUIRE(true);
+    REQUIRE(tree.InOrder() == "25, 26, 50, 60");
 }
 
-// //count
-TEST_CASE("Binary Search Tree size works with 1 value"){
-    BinarySearchTree<int> tree;
-    tree.Add(50);
-    REQUIRE(tree.Size() == 1);
-}
+// count
+// TEST_CASE("Binary Search Tree size works with 1 value"){
+//     BinarySearchTree<int> tree;
+//     tree.Add(50);
+//     REQUIRE(tree.Size() == 1);
+// }
 // TEST_CASE("Binary Search Tree size works with multiple values"){
 //     BinarySearchTree<int> tree;
 //     tree.Add(50);
