@@ -574,12 +574,11 @@ TEST_CASE("Binary Search Tree size works with multiple values"){
 }
 
 //clear
-
 TEST_CASE("Binary Search Tree clear works with 1 value"){
     BinarySearchTree<int> tree;
     tree.Add(50);
     tree.Clear();
-    REQUIRE(tree.Size() == 0);
+    REQUIRE(tree.InOrder() == "");
 }
 TEST_CASE("Binary Search Tree clear works with multiple values"){
     BinarySearchTree<int> tree;
@@ -588,5 +587,5 @@ TEST_CASE("Binary Search Tree clear works with multiple values"){
     tree.Add(60);
     tree.Add(26);
     tree.Clear();
-    REQUIRE(tree.Size() == 0);
+    REQUIRE(tree.InOrder() == "");
 }

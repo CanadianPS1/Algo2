@@ -5,6 +5,7 @@ template<typename T>
 class BinarySearchTree{
     private:
         TreeNode<T>* root = nullptr;
+        int count = 0;
     public:
         TreeNode<T>* GetRoot(){return root;}
         void SetRoot(TreeNode<T> temp){root = temp;}
@@ -13,8 +14,14 @@ class BinarySearchTree{
             return 0;
         }   
         void Add(T data){
-            if(root == nullptr) root = new TreeNode<T>(data);
-            else root->Add(data);
+            if(root == nullptr){
+                root = new TreeNode<T>(data);
+                count = root->Size();
+            }
+            else{
+                root->Add(data);
+                count = root->Size();
+            }
         }
         std::string InOrder(){
             if(root == nullptr) return "";
@@ -22,6 +29,9 @@ class BinarySearchTree{
         }
         bool Clear(){
             root->Clear();
+            count = 0;
+            delete root;
+            root = nullptr;
             return true;
         }
 };
