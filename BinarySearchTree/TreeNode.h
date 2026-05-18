@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 template<typename T>
-class TreeNode{
+struct TreeNode{
     private:
         T data;
         TreeNode<T>* left;
