@@ -589,3 +589,39 @@ TEST_CASE("Binary Search Tree clear works with multiple values"){
     tree.Clear();
     REQUIRE(tree.InOrder() == "");
 }
+
+//to array
+TEST_CASE("Binary Search Tree to array works with 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    std::vector<int> correct = {50};
+    REQUIRE(tree.ToArray() == correct);
+}
+TEST_CASE("Binary Search Tree to array works with multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    std::vector<int> correct = {25,26,50,60};
+    REQUIRE(tree.ToArray() == correct);
+}
+
+//contains
+TEST_CASE("Binary Search Tree to contains works with a correct value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.Contains(60) == true);
+}
+TEST_CASE("Binary Search Tree contains works with a incorrect values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    tree.Clear();
+    REQUIRE(tree.Contains(70) == false);
+}

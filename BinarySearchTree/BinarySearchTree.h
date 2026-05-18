@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "TreeNode.h"
+#include <vector>
 template<typename T>
 class BinarySearchTree{
     private:
@@ -34,4 +35,6 @@ class BinarySearchTree{
             root = nullptr;
             return true;
         }
+        std::vector<T> ToArray(){return root->ToArray();}
+        bool Contains(T value){return root->Contains(value);}
 };

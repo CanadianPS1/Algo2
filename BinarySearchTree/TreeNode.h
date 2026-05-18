@@ -24,6 +24,26 @@ struct TreeNode{
                 GetRight()->SizeHelper(size);
             }
         }
+        void ToArrayHelper(std::vector<T>& nodes){
+            if(left != nullptr){ 
+                nodes.push_back(GetLeft()->GetData());
+                GetLeft()->ToArrayHelper(nodes);
+            }
+            if(right != nullptr){ 
+                nodes.push_back(GetRight()->GetData());
+                GetRight()->ToArrayHelper(nodes);
+            }
+        }
+        void ContainsHelper(int value, bool& found){
+            if(left != nullptr && found == false){
+                if(GetLeft()->GetData() == value) found = true;
+                else GetLeft()->ContainsHelper(value, found);
+            }
+            if(right != nullptr && found == false){
+                if(GetRight()->GetData() == value) found = true;
+                else GetRight()->ContainsHelper(value, found);
+            }
+        }
     public:
         TreeNode(){
             left = nullptr;
@@ -76,5 +96,16 @@ struct TreeNode{
                 delete right;
                 right = nullptr;
             }
+        }
+        std::vector<T> ToArray(){
+            std::vector<T> nodes;
+            nodes.push_back(GetData());
+            ToArrayHelper(nodes);
+            return nodes;
+        }
+        bool Contains(T value){
+            bool found = false;
+            ContainsHelper(value, found);
+            return found;
         }
 };
