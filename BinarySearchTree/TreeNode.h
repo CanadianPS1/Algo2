@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <vector>
 template<typename T>
 class TreeNode{
     private:
@@ -12,6 +13,16 @@ class TreeNode{
             std::ostringstream oStringStream;
             oStringStream<<GetData();
             return oStringStream.str();
+        }
+        void SizeHelper(int& size){
+            if(left != nullptr){
+                size++;
+                GetLeft()->SizeHelper(size);
+            }
+            if(right != nullptr){
+                size++;
+                GetRight()->SizeHelper(size);
+            }
         }
     public:
         TreeNode(){
@@ -24,7 +35,16 @@ class TreeNode{
         void SetRight(TreeNode<T>* temp){right = temp;}
         TreeNode<T>* GetLeft(){return left;}
         TreeNode<T>* GetRight(){return right;}
-        TreeNode(T data){this->SetData(data);}
+        TreeNode(T data){
+            this->SetData(data);
+            left = nullptr;
+            right = nullptr;
+        }
+        int Size(){
+            int count = 1;
+            SizeHelper(count);
+            return count;
+        }
         void Add(T value){
             if(GetData() <= value){
                 if(GetRight() != nullptr) GetRight()->Add(value);
@@ -44,5 +64,17 @@ class TreeNode{
             if(left != nullptr) answer = leftInOrder + ", " + answer;
             if(right != nullptr) answer = answer + ", " + rightInOrder;
             return answer;
+        }
+        void Clear(){
+            if(left != nullptr){
+                left->Clear();
+                delete left;
+                left = nullptr;
+            }
+            if(right != nullptr){
+                right->Clear();
+                delete right;
+                right = nullptr;
+            }
         }
 };
