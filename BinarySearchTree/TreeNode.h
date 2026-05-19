@@ -49,11 +49,21 @@ struct TreeNode{
             left = nullptr;
             right = nullptr;
         }
+        /**
+         * @brief looks through all the nodes and returns the amount
+         * 
+         * @return int 
+         */
         int Size(){
             int count = 1;
             SizeHelper(count);
             return count;
         }
+        /**
+         * @brief creates a new left or right node
+         * 
+         * @param value 
+         */
         void Add(T value){
             if(GetData() <= value){
                 if(GetRight() != nullptr) GetRight()->Add(value);
@@ -63,6 +73,11 @@ struct TreeNode{
                 else SetLeft(new TreeNode<T>(value));
             }
         }
+        /**
+         * @brief finds all the nodes and turns them into a string with the root sorted
+         * 
+         * @return std::string 
+         */
         std::string InOrder(){
             std::string leftInOrder = "";
             std::string rightInOrder = "";
@@ -74,6 +89,11 @@ struct TreeNode{
             if(right != nullptr) answer = answer + ", " + rightInOrder;
             return answer;
         }
+        /**
+         * @brief finds all the nodes and turns them into a string with the root at the start
+         * 
+         * @return std::string 
+         */
         std::string PreOrder(){
             std::string leftInOrder = "";
             std::string rightInOrder = "";
@@ -85,6 +105,11 @@ struct TreeNode{
             if(right != nullptr) answer = answer + ", " + rightInOrder;
             return answer;
         }
+        /**
+         * @brief finds all the nodes and turns them into a string with the root at the end
+         * 
+         * @return std::string 
+         */
         std::string PostOrder(){
             std::string leftInOrder = "";
             std::string rightInOrder = "";
@@ -96,6 +121,10 @@ struct TreeNode{
             answer += ConvertToString(GetData());
             return answer;
         }
+        /**
+         * @brief whipes it clean of memory
+         * 
+         */
         void Clear(){
             if(left != nullptr){
                 left->Clear();
@@ -108,6 +137,11 @@ struct TreeNode{
                 right = nullptr;
             }
         }
+        /**
+         * @brief puts each value of the tree into an vector
+         * 
+         * @return std::vector<T> 
+         */
         std::vector<T> ToArray(){
             std::vector<T> leftNodes;
             std::vector<T> rightNodes;
@@ -119,6 +153,13 @@ struct TreeNode{
             if(right != nullptr) answer.insert(answer.end(), rightNodes.begin(), rightNodes.end());
             return answer;
         }
+        /**
+         * @brief returns what it found
+         * 
+         * @param value 
+         * @return true 
+         * @return false 
+         */
         bool Contains(T value){
             if(left == nullptr || right == nullptr) return false;
             bool found = false;
@@ -140,6 +181,13 @@ struct TreeNode{
             HeightHelper(0, depths);
             return depths[0];
         }
+    private:
+        /**
+         * @brief finds the deepest point in the tree
+         * 
+         * @param currentDepth 
+         * @param depths 
+         */
         void HeightHelper(int currentDepth, std::vector<int>& depths){
             currentDepth++;
             if(GetLeft() != nullptr) GetLeft()->HeightHelper(currentDepth, depths);
