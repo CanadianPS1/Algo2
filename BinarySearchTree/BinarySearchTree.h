@@ -53,6 +53,10 @@ class BinarySearchTree{
             return 0;
         }
         void Remove(T value){
-            if(root->Contains(value)) root->Remove(value);
+            if(root->Contains(value)){
+                std::vector<T> allValues = root->ToArray();
+                root->Clear();
+                for(int i = 0; i < allValues.size(); i++) if(allValues[i] != value) root->Add(allValues[i]);
+            }
         }
 };

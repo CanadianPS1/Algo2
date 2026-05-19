@@ -146,7 +146,4 @@ struct TreeNode{
             if(GetRight() != nullptr) GetRight()->HeightHelper(currentDepth, depths);
             depths.push_back(currentDepth);
         }
-        void Remove(T value){
-            
-        }
 };

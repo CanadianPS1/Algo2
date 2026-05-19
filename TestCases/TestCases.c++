@@ -685,3 +685,21 @@ TEST_CASE("Binary Search Tree can get the height when multiple values"){
     tree.Add(27);
     REQUIRE(tree.Height() == 4);
 }
+
+//remove
+TEST_CASE("Binary Search Tree can remopve when theirs 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Remove(50);
+    REQUIRE(tree.Contains(50) == false);
+}
+TEST_CASE("Binary Search Tree can remove when multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    tree.Add(27);
+    tree.Remove(27);
+    REQUIRE(tree.Contains(27) == false);
+}
