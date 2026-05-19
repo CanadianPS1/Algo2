@@ -17,32 +17,21 @@ struct TreeNode{
         void SizeHelper(int& size){
             if(left != nullptr){
                 size++;
-                GetLeft()->SizeHelper(size);
+                left->SizeHelper(size);
             }
             if(right != nullptr){
                 size++;
-                GetRight()->SizeHelper(size);
+                right->SizeHelper(size);
             }
         }
-        void ToArrayHelper(std::vector<T>& nodes){
-            if(left != nullptr){ 
-                nodes.push_back(GetLeft()->GetData());
-                GetLeft()->ToArrayHelper(nodes);
+        void ContainsHelper(T value, bool& found){
+            if(data == value){
+                found = true;
+                return;
             }
-            if(right != nullptr){ 
-                nodes.push_back(GetRight()->GetData());
-                GetRight()->ToArrayHelper(nodes);
-            }
-        }
-        void ContainsHelper(int value, bool& found){
-            if(left != nullptr && found == false){
-                if(GetLeft()->GetData() == value) found = true;
-                else GetLeft()->ContainsHelper(value, found);
-            }
-            if(right != nullptr && found == false){
-                if(GetRight()->GetData() == value) found = true;
-                else GetRight()->ContainsHelper(value, found);
-            }
+            if(left != nullptr && found == false) left->ContainsHelper(value, found);
+            if(right != nullptr && found == false) right->ContainsHelper(value, found);
+            
         }
     public:
         TreeNode(){
@@ -85,6 +74,28 @@ struct TreeNode{
             if(right != nullptr) answer = answer + ", " + rightInOrder;
             return answer;
         }
+        std::string PreOrder(){
+            std::string leftInOrder = "";
+            std::string rightInOrder = "";
+            if(left != nullptr) leftInOrder = GetLeft()->InOrder();
+            if(right != nullptr) rightInOrder = GetRight()->InOrder();
+            std::string answer;
+            answer = ConvertToString(GetData());
+            if(left != nullptr) answer = answer + ", " + leftInOrder;
+            if(right != nullptr) answer = answer + ", " + rightInOrder;
+            return answer;
+        }
+        std::string PostOrder(){
+            std::string leftInOrder = "";
+            std::string rightInOrder = "";
+            if(left != nullptr) leftInOrder = GetLeft()->InOrder();
+            if(right != nullptr) rightInOrder = GetRight()->InOrder();
+            std::string answer = "";
+            if(left != nullptr) answer = leftInOrder + ", ";
+            if(right != nullptr) answer = answer + rightInOrder + ", ";
+            answer += ConvertToString(GetData());
+            return answer;
+        }
         void Clear(){
             if(left != nullptr){
                 left->Clear();
@@ -98,14 +109,44 @@ struct TreeNode{
             }
         }
         std::vector<T> ToArray(){
-            std::vector<T> nodes;
-            nodes.push_back(GetData());
-            ToArrayHelper(nodes);
-            return nodes;
+            std::vector<T> leftNodes;
+            std::vector<T> rightNodes;
+            if(left != nullptr) leftNodes = GetLeft()->ToArray();
+            if(right != nullptr) rightNodes = GetRight()->ToArray();
+            std::vector<T> answer;
+            if(left != nullptr) answer = leftNodes;
+            answer.push_back(GetData());
+            if(right != nullptr) answer.insert(answer.end(), rightNodes.begin(), rightNodes.end());
+            return answer;
         }
         bool Contains(T value){
+            if(left == nullptr || right == nullptr) return false;
             bool found = false;
             ContainsHelper(value, found);
             return found;
+        }
+        /*
+            height sudo code
+            param current depth int param depths vector
+                depth++
+                go left
+                go right
+                add depth to depth vector
+                return vector
+                
+        */
+        int Height(){
+            std::vector<int> depths;
+            HeightHelper(0, depths);
+            return depths[0];
+        }
+        void HeightHelper(int currentDepth, std::vector<int>& depths){
+            currentDepth++;
+            if(GetLeft() != nullptr) GetLeft()->HeightHelper(currentDepth, depths);
+            if(GetRight() != nullptr) GetRight()->HeightHelper(currentDepth, depths);
+            depths.push_back(currentDepth);
+        }
+        void Remove(T value){
+            
         }
 };

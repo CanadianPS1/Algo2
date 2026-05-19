@@ -28,6 +28,14 @@ class BinarySearchTree{
             if(root == nullptr) return "";
             return root->InOrder();
         }
+        std::string PreOrder(){
+            if(root == nullptr) return "";
+            return root->PreOrder();
+        }
+        std::string PostOrder(){
+            if(root == nullptr) return "";
+            return root->PostOrder();
+        }
         bool Clear(){
             root->Clear();
             count = 0;
@@ -36,5 +44,15 @@ class BinarySearchTree{
             return true;
         }
         std::vector<T> ToArray(){return root->ToArray();}
-        bool Contains(T value){return root->Contains(value);}
+        bool Contains(T value){
+            if(count == 0) return false;
+            return root->Contains(value);
+        }
+        int Height(){
+            if(count > 0) return root->Height();
+            return 0;
+        }
+        void Remove(T value){
+            if(root->Contains(value)) root->Remove(value);
+        }
 };

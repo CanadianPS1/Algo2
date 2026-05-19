@@ -622,6 +622,66 @@ TEST_CASE("Binary Search Tree contains works with a incorrect values"){
     tree.Add(25);
     tree.Add(60);
     tree.Add(26);
-    tree.Clear();
     REQUIRE(tree.Contains(70) == false);
+}
+
+//inorder
+TEST_CASE("Binary Search Tree can inorder 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.InOrder() == "50");
+}
+TEST_CASE("Binary Search Tree can inorder multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.InOrder() == "25, 26, 50, 60");
+}
+
+//preorder
+TEST_CASE("Binary Search Tree can preorder 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.PreOrder() == "50");
+}
+TEST_CASE("Binary Search Tree can preorder multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.PreOrder() == "50, 25, 26, 60");
+}
+
+//postorder
+TEST_CASE("Binary Search Tree can postorder 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.PostOrder() == "50");
+}
+TEST_CASE("Binary Search Tree can postorder multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.PostOrder() == "25, 26, 60, 50");
+}
+
+//height
+TEST_CASE("Binary Search Tree can get the height 1 value"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.Height() == 1);
+}
+TEST_CASE("Binary Search Tree can get the height when multiple values"){
+    BinarySearchTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    tree.Add(27);
+    REQUIRE(tree.Height() == 4);
 }
