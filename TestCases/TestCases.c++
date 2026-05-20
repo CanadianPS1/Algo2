@@ -1,9 +1,5 @@
 #include "../External/catch_amalgamated.hpp"
-#include "../LinkedList/SingleLinkedList.h"
-#include "../LinkedList/DoubleLinkedList.h"
-#include "../Stack/Stack.h"
-#include "../Queue/Queue.h"
-#include "../BinarySearchTree/BinarySearchTree.h"
+#include "../Lib/DataStructures.hpp"
 #include <bits/stdc++.h>
 #include <vector>
 
