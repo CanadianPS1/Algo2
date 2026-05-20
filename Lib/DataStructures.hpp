@@ -2,6 +2,30 @@
 #include <string>
 #include <sstream>
 #include <vector>
+template <typename T>
+struct LinkedListNode{
+    public:
+    LinkedListNode(){
+        next = nullptr;
+        past = nullptr;
+    }
+    private:
+    T data;
+    LinkedListNode<T>* next;
+    LinkedListNode<T>* past;
+    public:
+    T GetData(){return data;}
+    void SetData(T temp){data = temp;}
+    void SetNext(LinkedListNode<T>* temp = nullptr){next = temp;}
+    void SetPast(LinkedListNode<T>* temp = nullptr){past = temp;}
+    LinkedListNode<T>* GetNext(){return next;}
+    LinkedListNode<T>* GetPast(){return past;}
+    LinkedListNode(T data, LinkedListNode<T>* nextTemp = nullptr, LinkedListNode<T>* pastTemp = nullptr){
+        this->SetData(data);
+        this->SetNext(nextTemp);
+        this->SetPast(pastTemp);
+    }
+};
 template<typename T>
 struct TreeNode{
     private:
@@ -302,30 +326,6 @@ struct BinarySearchTree{
                 for(int i = 0; i < allValues.size(); i++) if(allValues[i] != value) root->Add(allValues[i]);
             }
         }
-};
-template <typename T>
-struct LinkedListNode{
-    public:
-    LinkedListNode(){
-        next = nullptr;
-        past = nullptr;
-    }
-    private:
-    T data;
-    LinkedListNode<T>* next;
-    LinkedListNode<T>* past;
-    public:
-    T GetData(){return data;}
-    void SetData(T temp){data = temp;}
-    void SetNext(LinkedListNode<T>* temp = nullptr){next = temp;}
-    void SetPast(LinkedListNode<T>* temp = nullptr){past = temp;}
-    LinkedListNode<T>* GetNext(){return next;}
-    LinkedListNode<T>* GetPast(){return past;}
-    LinkedListNode(T data, LinkedListNode<T>* nextTemp = nullptr, LinkedListNode<T>* pastTemp = nullptr){
-        this->SetData(data);
-        this->SetNext(nextTemp);
-        this->SetPast(pastTemp);
-    }
 };
 template <typename T>
 struct DoubleLinkedList{
