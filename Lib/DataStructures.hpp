@@ -219,111 +219,231 @@ struct TreeNode{
         }
 };
 template<typename T>
-struct BinarySearchTree{
+struct AVLTreeNode{
     private:
-        TreeNode<T>* root = nullptr;
-        int count = 0;
+        T data;
+        AVLTreeNode<T>* left;
+        AVLTreeNode<T>* right;
+        std::string ConvertToString(T value){
+            std::ostringstream oStringStream;
+            oStringStream<<GetData();
+            return oStringStream.str();
+        }
+        void SizeHelper(int& size){
+            if(left != nullptr){
+                size++;
+                left->SizeHelper(size);
+            }
+            if(right != nullptr){
+                size++;
+                right->SizeHelper(size);
+            }
+        }
+        void ContainsHelper(T value, bool& found){
+            if(data == value){
+                found = true;
+                return;
+            }
+            if(left != nullptr && found == false) left->ContainsHelper(value, found);
+            if(right != nullptr && found == false) right->ContainsHelper(value, found);
+            
+        }
     public:
+        AVLTreeNode(){
+            left = nullptr;
+            right = nullptr;
+        }
+        T GetData(){return data;}
+        void SetData(T temp){data = temp;}
+        void SetLeft(AVLTreeNode<T>* temp){left = temp;}
+        void SetRight(AVLTreeNode<T>* temp){right = temp;}
+        AVLTreeNode<T>* GetLeft(){return left;}
+        AVLTreeNode<T>* GetRight(){return right;}
+        AVLTreeNode(T data){
+            this->SetData(data);
+            left = nullptr;
+            right = nullptr;
+        }
         /**
-         * @brief Get the Root object
-         * 
-         * @return TreeNode<T>* 
-         */
-
-        TreeNode<T>* GetRoot(){return root;}
-        /**
-         * @brief Set the Root object
-         * 
-         * @param temp 
-         */
-        void SetRoot(TreeNode<T> temp){root = temp;}
-        /**
-         * @brief calls the size class and returns what it finds
+         * @brief looks through all the nodes and returns the amount
          * 
          * @return int 
          */
         int Size(){
-            if(root != nullptr) return root->Size();
-            return 0;
+            int count = 1;
+            SizeHelper(count);
+            return count;
         }
         /**
-         * @brief creates a root if their isnt one and if their is it calls the add method on it
+         * @brief creates a new left or right node
          * 
-         * @param data 
+         * @param value 
          */
-        void Add(T data){
-            if(root == nullptr){
-                root = new TreeNode<T>(data);
-                count = root->Size();
-            }
-            else{
-                root->Add(data);
-                count = root->Size();
+        void Add(T value){
+            if(GetData() <= value){
+                if(GetRight() != nullptr) GetRight()->Add(value);
+                else SetRight(new AVLTreeNode<T>(value));
+            }else{
+                if(GetLeft() != nullptr) GetLeft()->Add(value);
+                else SetLeft(new AVLTreeNode<T>(value));
             }
         }
         /**
-         * @brief calls the inorder method on the node
+         * @brief finds all the nodes and turns them into a string with the root sorted
          * 
          * @return std::string 
          */
         std::string InOrder(){
-            if(root == nullptr) return "";
-            return root->InOrder();
+            std::string leftInOrder = "";
+            std::string rightInOrder = "";
+            if(left != nullptr) leftInOrder = GetLeft()->InOrder();
+            if(right != nullptr) rightInOrder = GetRight()->InOrder();
+            std::string answer;
+            answer = ConvertToString(GetData());
+            if(left != nullptr) answer = leftInOrder + ", " + answer;
+            if(right != nullptr) answer = answer + ", " + rightInOrder;
+            return answer;
         }
         /**
-         * @brief calls the preorder method on the node
+         * @brief finds all the nodes and turns them into a string with the root at the start
          * 
          * @return std::string 
          */
         std::string PreOrder(){
-            if(root == nullptr) return "";
-            return root->PreOrder();
+            std::string leftInOrder = "";
+            std::string rightInOrder = "";
+            if(left != nullptr) leftInOrder = GetLeft()->InOrder();
+            if(right != nullptr) rightInOrder = GetRight()->InOrder();
+            std::string answer;
+            answer = ConvertToString(GetData());
+            if(left != nullptr) answer = answer + ", " + leftInOrder;
+            if(right != nullptr) answer = answer + ", " + rightInOrder;
+            return answer;
         }
         /**
-         * @brief calls the postorder method on the node
+         * @brief finds all the nodes and turns them into a string with the root at the end
          * 
          * @return std::string 
          */
         std::string PostOrder(){
-            if(root == nullptr) return "";
-            return root->PostOrder();
-        }
-        bool Clear(){
-            root->Clear();
-            count = 0;
-            delete root;
-            root = nullptr;
-            return true;
+            std::string leftInOrder = "";
+            std::string rightInOrder = "";
+            if(left != nullptr) leftInOrder = GetLeft()->InOrder();
+            if(right != nullptr) rightInOrder = GetRight()->InOrder();
+            std::string answer = "";
+            if(left != nullptr) answer = leftInOrder + ", ";
+            if(right != nullptr) answer = answer + rightInOrder + ", ";
+            answer += ConvertToString(GetData());
+            return answer;
         }
         /**
-         * @brief converts your tree into a T vector
+         * @brief whipes it clean of memory
+         * 
+         */
+        void Clear(){
+            if(left != nullptr){
+                left->Clear();
+                delete left;
+                left = nullptr;
+            }
+            if(right != nullptr){
+                right->Clear();
+                delete right;
+                right = nullptr;
+            }
+        }
+        /**
+         * @brief puts each value of the tree into an vector
          * 
          * @return std::vector<T> 
          */
-        std::vector<T> ToArray(){return root->ToArray();}
-        bool Contains(T value){
-            if(count == 0) return false;
-            return root->Contains(value);
+        std::vector<T> ToArray(){
+            std::vector<T> leftNodes;
+            std::vector<T> rightNodes;
+            if(left != nullptr) leftNodes = GetLeft()->ToArray();
+            if(right != nullptr) rightNodes = GetRight()->ToArray();
+            std::vector<T> answer;
+            if(left != nullptr) answer = leftNodes;
+            answer.push_back(GetData());
+            if(right != nullptr) answer.insert(answer.end(), rightNodes.begin(), rightNodes.end());
+            return answer;
         }
         /**
-         * @brief calls the height method on the node
-         * 
-         * @return int 
-         */
-        int Height(){
-            if(count > 0) return root->Height();
-            return 0;
-        }
-        /**
-         * @brief turns the tree into an array, then clears the tree and makes a new one without the var
+         * @brief returns what it found
          * 
          * @param value 
+         * @return true 
+         * @return false 
          */
-        void Remove(T value){
-            if(root->Contains(value)){
-                std::vector<T> allValues = root->ToArray();
-                root->Clear();
-                for(int i = 0; i < allValues.size(); i++) if(allValues[i] != value) root->Add(allValues[i]);
+        bool Contains(T value){
+            if(left == nullptr || right == nullptr) return false;
+            bool found = false;
+            ContainsHelper(value, found);
+            return found;
+        }
+        /*
+            height sudo code
+            param current depth int param depths vector
+                depth++
+                go left
+                go right
+                add depth to depth vector
+                return vector
+                
+        */
+        int Height(){
+            std::vector<int> depths;
+            HeightHelper(0, depths);
+            return depths[0];
+        }
+    private:
+        /**
+         * @brief finds the deepest point in the tree
+         * 
+         * @param currentDepth 
+         * @param depths 
+         */
+        void HeightHelper(int currentDepth, std::vector<int>& depths){
+            currentDepth++;
+            if(GetLeft() != nullptr) GetLeft()->HeightHelper(currentDepth, depths);
+            if(GetRight() != nullptr) GetRight()->HeightHelper(currentDepth, depths);
+            depths.push_back(currentDepth);
+        }
+        //TODO write the balance method
+        void Balance(){}
+        void RightLeft(AVLTreeNode<T>& node){
+            Right(node);
+            Left(node);
+        }
+        void LeftRight(AVLTreeNode<T>& node){
+            Left(node);
+            Right(node);
+        }
+        void Right(AVLTreeNode<T>& node){
+            T temp = node.GetData();
+            node->GetData() = GetLeft()->GetData();
+            node->GetLeft()->SetData(temp);
+            if(node->GetLeft()->GetData() > node->GetData()){
+                node->GetRight() = node->GetLeft();
+                if(node->GetRight()->GetLeft() != nullptr){
+                    node->GetLeft() = node->GetRight()->GetLeft();
+                    node->GetRight()->GetLeft() = nullptr;
+                }
+            }
+        }
+        void Left(AVLTreeNode<T>& node){
+            T temp = node.GetData();
+            node->GetData() = node->GetRight()->GetData();
+            node->GetRight()->SetData(temp);
+            if(node->GetRight()->GetData() < node->GetData()){
+                node->GetLeft() = node->GetRight();
+                if(node->GetRight()->GetData() < node->GetData()){
+                    node->GetLeft() = node->GetRight();
+                    if(node->GetRight()->GetRight() != nullptr){
+                        node->GetRight() = node->GetRight()->GetRight();
+                        node->GetLeft()->GetRight() = nullptr;
+                    }
+                }
             }
         }
 };
@@ -759,4 +879,222 @@ struct Stack{
      * @return int 
      */
     int Size(){return list.Size();}
+};
+template<typename T>
+struct BinarySearchTree{
+    private:
+        TreeNode<T>* root = nullptr;
+        int count = 0;
+    public:
+        /**
+         * @brief Get the Root object
+         * 
+         * @return TreeNode<T>* 
+         */
+
+        TreeNode<T>* GetRoot(){return root;}
+        /**
+         * @brief Set the Root object
+         * 
+         * @param temp 
+         */
+        void SetRoot(TreeNode<T> temp){root = temp;}
+        /**
+         * @brief calls the size class and returns what it finds
+         * 
+         * @return int 
+         */
+        int Size(){
+            if(root != nullptr) return root->Size();
+            return 0;
+        }
+        /**
+         * @brief creates a root if their isnt one and if their is it calls the add method on it
+         * 
+         * @param data 
+         */
+        void Add(T data){
+            if(root == nullptr){
+                root = new TreeNode<T>(data);
+                count = root->Size();
+            }
+            else{
+                root->Add(data);
+                count = root->Size();
+            }
+        }
+        /**
+         * @brief calls the inorder method on the node
+         * 
+         * @return std::string 
+         */
+        std::string InOrder(){
+            if(root == nullptr) return "";
+            return root->InOrder();
+        }
+        /**
+         * @brief calls the preorder method on the node
+         * 
+         * @return std::string 
+         */
+        std::string PreOrder(){
+            if(root == nullptr) return "";
+            return root->PreOrder();
+        }
+        /**
+         * @brief calls the postorder method on the node
+         * 
+         * @return std::string 
+         */
+        std::string PostOrder(){
+            if(root == nullptr) return "";
+            return root->PostOrder();
+        }
+        bool Clear(){
+            root->Clear();
+            count = 0;
+            delete root;
+            root = nullptr;
+            return true;
+        }
+        /**
+         * @brief converts your tree into a T vector
+         * 
+         * @return std::vector<T> 
+         */
+        std::vector<T> ToArray(){return root->ToArray();}
+        bool Contains(T value){
+            if(count == 0) return false;
+            return root->Contains(value);
+        }
+        /**
+         * @brief calls the height method on the node
+         * 
+         * @return int 
+         */
+        int Height(){
+            if(count > 0) return root->Height();
+            return 0;
+        }
+        /**
+         * @brief turns the tree into an array, then clears the tree and makes a new one without the var
+         * 
+         * @param value 
+         */
+        void Remove(T value){
+            if(root->Contains(value)){
+                std::vector<T> allValues = root->ToArray();
+                root->Clear();
+                for(int i = 0; i < allValues.size(); i++) if(allValues[i] != value) root->Add(allValues[i]);
+            }
+        }
+};  
+template<typename T>
+struct AVLTree{
+    private:
+        TreeNode<T>* root = nullptr;
+        int count = 0;
+    public:
+        /**
+         * @brief Get the Root object
+         * 
+         * @return TreeNode<T>* 
+         */
+
+        TreeNode<T>* GetRoot(){return root;}
+        /**
+         * @brief Set the Root object
+         * 
+         * @param temp 
+         */
+        void SetRoot(TreeNode<T> temp){root = temp;}
+        /**
+         * @brief calls the size class and returns what it finds
+         * 
+         * @return int 
+         */
+        int Size(){
+            if(root != nullptr) return root->Size();
+            return 0;
+        }
+        /**
+         * @brief creates a root if their isnt one and if their is it calls the add method on it
+         * 
+         * @param data 
+         */
+        void Add(T data){
+            if(root == nullptr){
+                root = new TreeNode<T>(data);
+                count = root->Size();
+            }
+            else{
+                root->Add(data);
+                count = root->Size();
+            }
+        }
+        /**
+         * @brief calls the inorder method on the node
+         * 
+         * @return std::string 
+         */
+        std::string InOrder(){
+            if(root == nullptr) return "";
+            return root->InOrder();
+        }
+        /**
+         * @brief calls the preorder method on the node
+         * 
+         * @return std::string 
+         */
+        std::string PreOrder(){
+            if(root == nullptr) return "";
+            return root->PreOrder();
+        }
+        /**
+         * @brief calls the postorder method on the node
+         * 
+         * @return std::string 
+         */
+        std::string PostOrder(){
+            if(root == nullptr) return "";
+            return root->PostOrder();
+        }
+        bool Clear(){
+            root->Clear();
+            count = 0;
+            delete root;
+            root = nullptr;
+            return true;
+        }
+        /**
+         * @brief converts your tree into a T vector
+         * 
+         * @return std::vector<T> 
+         */
+        std::vector<T> ToArray(){return root->ToArray();}
+        bool Contains(T value){
+            if(count == 0) return false;
+            return root->Contains(value);
+        }
+        /**
+         * @brief calls the height method on the node
+         * 
+         * @return int 
+         */
+        int Height(){
+            if(count > 0) return root->Height();
+            return 0;
+        }
+        /**
+         * @brief turns the tree into an array, then clears the tree and makes a new one without the var
+         * 
+         * @param value 
+         */
+        void Remove(T value){
+            if(root->Contains(value)){
+                std::vector<T> allValues = root->ToArray();
+                root->Clear();
+                for(int i = 0; i < allValues.size(); i++) if(allValues[i] != value) root->Add(allValues[i]);
+            }
+        }
 };
