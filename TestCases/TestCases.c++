@@ -699,3 +699,179 @@ TEST_CASE("Binary Search Tree can remove when multiple values"){
     tree.Remove(27);
     REQUIRE(tree.Contains(27) == false);
 }
+
+/*
+
+    AVL Tree
+
+*/
+
+//add
+TEST_CASE("AVLTree can Add 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.InOrder() == "50");
+}
+TEST_CASE("AVLTree can Add multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.InOrder() == "25, 26, 50, 60");
+}
+
+//count
+TEST_CASE("AVLTree size works with 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.Size() == 1);
+}
+TEST_CASE("AVLTree size works with multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.Size() == 4);
+}
+
+//clear
+TEST_CASE("AVLTree clear works with 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Clear();
+    REQUIRE(tree.InOrder() == "");
+}
+TEST_CASE("AVLTree clear works with multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    tree.Clear();
+    REQUIRE(tree.InOrder() == "");
+}
+
+//to array
+TEST_CASE("AVLTree to array works with 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    std::vector<int> correct = {50};
+    REQUIRE(tree.ToArray() == correct);
+}
+TEST_CASE("AVLTree to array works with multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(51);
+    tree.Add(52);
+    tree.Add(53);
+    std::vector<int> correct = {51,50,52,53};
+    REQUIRE(tree.ToArray() == correct);
+}
+TEST_CASE("AVLTree to array works with multiple values2"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(49);
+    tree.Add(48);
+    tree.Add(47);
+    std::vector<int> correct = {49,48,50,47};
+    REQUIRE(tree.ToArray() == correct);
+}
+
+//contains
+TEST_CASE("AVLTree to contains works with a correct value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.Contains(60) == true);
+}
+TEST_CASE("AVLTree contains works with a incorrect values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.Contains(70) == false);
+}
+
+//inorder
+TEST_CASE("AVLTree can inorder 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.InOrder() == "50");
+}
+TEST_CASE("AVLTree can inorder multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.InOrder() == "25, 26, 50, 60");
+}
+
+//preorder
+TEST_CASE("AVLTree can preorder 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.PreOrder() == "50");
+}
+TEST_CASE("AVLTree can preorder multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.PreOrder() == "50, 25, 26, 60");
+}
+
+//postorder
+TEST_CASE("AVLTree can postorder 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.PostOrder() == "50");
+}
+TEST_CASE("AVLTree can postorder multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    REQUIRE(tree.PostOrder() == "25, 26, 60, 50");
+}
+
+//height
+TEST_CASE("AVLTree can get the height 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    REQUIRE(tree.Height() == 1);
+}
+TEST_CASE("AVLTree can get the height when multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    tree.Add(27);
+    REQUIRE(tree.Height() == 3);
+}
+
+//remove
+TEST_CASE("AVLTree can remopve when theirs 1 value"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Remove(50);
+    REQUIRE(tree.Contains(50) == false);
+}
+TEST_CASE("AVLTree can remove when multiple values"){
+    AVLTree<int> tree;
+    tree.Add(50);
+    tree.Add(25);
+    tree.Add(60);
+    tree.Add(26);
+    tree.Add(27);
+    tree.Remove(27);
+    REQUIRE(tree.Contains(27) == false);
+}

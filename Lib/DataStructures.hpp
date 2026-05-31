@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <queue>
 template <typename T>
 struct LinkedListNode{
     public:
@@ -279,14 +280,37 @@ struct AVLTreeNode{
          * 
          * @param value 
          */
-        void Add(T value){
-            if(GetData() <= value){
-                if(GetRight() != nullptr) GetRight()->Add(value);
-                else SetRight(new AVLTreeNode<T>(value));
-            }else{
-                if(GetLeft() != nullptr) GetLeft()->Add(value);
-                else SetLeft(new AVLTreeNode<T>(value));
+        AVLTreeNode<T>* Add(T value){
+            if(value <= data){
+                if(left) left = left->Add(value);
+                else left = new AVLTreeNode<T>(value);
             }
+            else{
+                if(right) right = right->Add(value);
+                else right = new AVLTreeNode<T>(value);
+            }
+            int leftHight = (left ? left->Height() : 0);
+            int rightHight = (right ? right->Height() : 0);
+            int balanceFactor = leftHight - rightHight;
+            if(balanceFactor > 1){
+                int leftLeft = (left->GetLeft() ? left->GetLeft()->Height() : 0);
+                int leftRight = (left->GetRight() ? left->GetRight()->Height() : 0);
+                if(leftLeft >= leftRight) return rotateRight(this);
+                else{
+                    left = rotateLeft(left);
+                    return rotateRight(this);
+                }
+            }
+            if(balanceFactor < -1){
+                int rightLeft = (right->GetLeft() ? right->GetLeft()->Height() : 0);
+                int rightRight = (right->GetRight() ? right->GetRight()->Height() : 0);
+                if(rightRight >= rightLeft) return rotateLeft(this);
+                else{
+                    right = rotateRight(right);
+                    return rotateLeft(this);
+                }
+            }
+            return this;
         }
         /**
          * @brief finds all the nodes and turns them into a string with the root sorted
@@ -358,16 +382,18 @@ struct AVLTreeNode{
          * @return std::vector<T> 
          */
         std::vector<T> ToArray(){
-            std::vector<T> leftNodes;
-            std::vector<T> rightNodes;
-            if(left != nullptr) leftNodes = GetLeft()->ToArray();
-            if(right != nullptr) rightNodes = GetRight()->ToArray();
-            std::vector<T> answer;
-            if(left != nullptr) answer = leftNodes;
-            answer.push_back(GetData());
-            if(right != nullptr) answer.insert(answer.end(), rightNodes.begin(), rightNodes.end());
-            return answer;
-        }
+			std::vector<T> answer;
+			std::queue<AVLTreeNode<T>*> nodes;
+			nodes.push(this);
+			while(!nodes.empty()){
+				AVLTreeNode<T>* node = nodes.front();
+				nodes.pop();
+				answer.push_back(node->GetData());
+				if(node->GetLeft() != nullptr) nodes.push(node->GetLeft());
+				if(node->GetRight() != nullptr) nodes.push(node->GetRight());
+			}
+			return answer;
+		}
         /**
          * @brief returns what it found
          * 
@@ -409,43 +435,23 @@ struct AVLTreeNode{
             if(GetRight() != nullptr) GetRight()->HeightHelper(currentDepth, depths);
             depths.push_back(currentDepth);
         }
-        //TODO write the balance method
-        void Balance(){}
-        void RightLeft(AVLTreeNode<T>& node){
-            Right(node);
-            Left(node);
+        //O(n) should be one on this
+        AVLTreeNode<T>* rotateLeft(AVLTreeNode<T>* left){
+            AVLTreeNode<T>* right = left->GetRight();
+            AVLTreeNode<T>* tempNode = right->GetLeft();
+            right->SetLeft(left);
+            left->SetRight(tempNode);
+            return right;
         }
-        void LeftRight(AVLTreeNode<T>& node){
-            Left(node);
-            Right(node);
+        AVLTreeNode<T>* rotateRight(AVLTreeNode<T>* right){
+            AVLTreeNode<T>* left = right->GetLeft();
+            AVLTreeNode<T>* tempNode = left->GetRight();
+            left->SetRight(right);
+            right->SetLeft(tempNode);
+            return left;
         }
-        void Right(AVLTreeNode<T>& node){
-            T temp = node.GetData();
-            node->GetData() = GetLeft()->GetData();
-            node->GetLeft()->SetData(temp);
-            if(node->GetLeft()->GetData() > node->GetData()){
-                node->GetRight() = node->GetLeft();
-                if(node->GetRight()->GetLeft() != nullptr){
-                    node->GetLeft() = node->GetRight()->GetLeft();
-                    node->GetRight()->GetLeft() = nullptr;
-                }
-            }
-        }
-        void Left(AVLTreeNode<T>& node){
-            T temp = node.GetData();
-            node->GetData() = node->GetRight()->GetData();
-            node->GetRight()->SetData(temp);
-            if(node->GetRight()->GetData() < node->GetData()){
-                node->GetLeft() = node->GetRight();
-                if(node->GetRight()->GetData() < node->GetData()){
-                    node->GetLeft() = node->GetRight();
-                    if(node->GetRight()->GetRight() != nullptr){
-                        node->GetRight() = node->GetRight()->GetRight();
-                        node->GetLeft()->GetRight() = nullptr;
-                    }
-                }
-            }
-        }
+
+
 };
 template <typename T>
 struct DoubleLinkedList{
@@ -992,7 +998,7 @@ struct BinarySearchTree{
 template<typename T>
 struct AVLTree{
     private:
-        TreeNode<T>* root = nullptr;
+        AVLTreeNode<T>* root = nullptr;
         int count = 0;
     public:
         /**
@@ -1001,13 +1007,13 @@ struct AVLTree{
          * @return TreeNode<T>* 
          */
 
-        TreeNode<T>* GetRoot(){return root;}
+        AVLTreeNode<T>* GetRoot(){return root;}
         /**
          * @brief Set the Root object
          * 
          * @param temp 
          */
-        void SetRoot(TreeNode<T> temp){root = temp;}
+        void SetRoot(AVLTreeNode<T> temp){root = temp;}
         /**
          * @brief calls the size class and returns what it finds
          * 
@@ -1023,14 +1029,9 @@ struct AVLTree{
          * @param data 
          */
         void Add(T data){
-            if(root == nullptr){
-                root = new TreeNode<T>(data);
-                count = root->Size();
-            }
-            else{
-                root->Add(data);
-                count = root->Size();
-            }
+            if(root == nullptr) root = new AVLTreeNode<T>(data);
+            else root = root->Add(data);
+            count = (root ? root->Size() : 0);
         }
         /**
          * @brief calls the inorder method on the node
