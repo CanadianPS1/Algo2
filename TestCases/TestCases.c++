@@ -2,6 +2,7 @@
 #include "../Lib/DataStructures.hpp"
 #include <bits/stdc++.h>
 #include <vector>
+#include <tuple>
 
 /*
 
@@ -874,4 +875,44 @@ TEST_CASE("AVLTree can remove when multiple values"){
     tree.Add(27);
     tree.Remove(27);
     REQUIRE(tree.Contains(27) == false);
+}
+
+/*
+
+    Graph
+
+*/
+
+//dikstras
+TEST_CASE("graph can do dikstras"){
+    std::vector<std::string> maze = {
+        "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,Z",
+        "A,B:7", 
+        "B,A:7,C:5,I:3",
+        "C,B:5,D:2",
+        "D,C:2,E:8",
+        "E,D:8,F:1,N:4",
+        "F,E:1,G:9",
+        "G,F:9,H:6",
+        "H,G:6,Z:2",
+        "I,B:3,J:5",
+        "J,I:5,K:1,M:6",
+        "K,J:1,L:8",
+        "L,K:8,Z:9",
+        "M,J:6,N:4,O:3",
+        "O,M:3,N:2",
+        "N,M:4,O:2",
+        "Z,L:9,H:2"
+    };
+    Graph<std::string> graph(maze);
+    std::vector<std::tuple<std::string, float>> actule = graph.dikstras("N");
+    std::vector<std::tuple<std::string, float>> expected = {
+        {"A", 0.f},
+        {"B", 7.f},
+        {"I", 10.f},
+        {"J", 15.f},
+        {"M", 21.f},
+        {"N", 25.f}
+    };
+    REQUIRE(actule == expected);
 }

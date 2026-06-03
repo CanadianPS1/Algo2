@@ -3,6 +3,9 @@
 #include <sstream>
 #include <vector>
 #include <queue>
+#include <tuple>
+#include <map>
+#include <bits/stdc++.h>
 template <typename T>
 struct LinkedListNode{
     public:
@@ -1096,6 +1099,111 @@ struct AVLTree{
                 std::vector<T> allValues = root->ToArray();
                 root->Clear();
                 for(int i = 0; i < allValues.size(); i++) if(allValues[i] != value) root->Add(allValues[i]);
+            }
+        }
+};
+template <typename T>
+struct GraphNode{
+    GraphNode(T value) : data{value}{}
+    void AddConnection(GraphNode<T>* node, float weight){connections.nodes.insert({node, weight});}
+    T GetData(){return data;}
+    std::map<GraphNode*, float> GetConnections(){return connections.nodes;}
+    private:
+        T data;
+        struct Connection{
+            std::map<GraphNode*, float> nodes;
+        };
+        Connection connections;
+};
+template <typename T>
+struct Graph{
+    Graph(std::vector<std::string> adjacencyList){
+        std::vector<std::string> nodes;
+        std::stringstream stringStream(adjacencyList[0]);
+        while(stringStream.good()){
+            std::string substring;
+            getline(stringStream, substring, ',');
+            nodes.push_back(substring);
+        }
+        for(int i = 0; i < nodes.size(); i++) nodeObjects.push_back(new GraphNode<T>(nodes[i]));;
+        root = nodeObjects[0];
+        for(int i = 1; i < adjacencyList.size(); i++){
+            nodes.clear();
+            std::string token;
+            std::stringstream ss(adjacencyList[i]);
+            while(getline(ss, token, ',')) nodes.push_back(token);
+            if(nodes.empty()) continue;
+            std::string originName = nodes[0];
+            nodes.erase(nodes.begin());
+            GraphNode<T>* originNode = nullptr;
+            for(auto n : nodeObjects) if(n->GetData() == originName){ 
+                originNode = n; 
+                break; 
+            }
+            if(originNode){
+                for(auto segment : nodes){
+                    std::stringstream ss2(segment);
+                    std::vector<std::string> parts;
+                    while(getline(ss2, token, ':')) parts.push_back(token);
+                    if(parts.size()<2) continue;
+                    float weight = std::stof(parts[1]);
+                    for(auto nodePtr : nodeObjects) if(nodePtr->GetData() == parts[0]) originNode->AddConnection(nodePtr, weight);
+                }
+            }
+        }
+    }
+    ~Graph(){
+        for(auto n : nodeObjects) delete n;
+    }
+    T StringTo(const std::string& data){
+        std::stringstream stringSystem(data);
+        T value;
+        stringSystem >> value;
+        return value;
+    }
+    std::vector<std::tuple<T, float>> dikstras(const T end){
+        std::vector<std::vector<std::tuple<GraphNode<T>*, float>>> paths;
+        std::vector<GraphNode<T>*> visited;
+        std::vector<std::tuple<GraphNode<T>*, float>> path;
+        DepthFirst(root, end, 0.f, visited, paths, path);
+        std::vector<std::tuple<GraphNode<T>*, float>> bestPath;
+        if(!paths.empty()) bestPath = paths[0];
+        else{
+            bestPath.clear();
+            bestPath.push_back(std::make_tuple(nullptr, 0.f));
+        }
+        for(int i = 0; i < paths.size(); i++){
+            if(bestPath.empty() || paths[i].empty()) continue;
+            float bestCost = std::get<1>(bestPath.back());
+            float currentCost = std::get<1>(paths[i].back());
+            if(currentCost < bestCost){
+                bestPath.clear();
+                bestPath = paths[i];
+            }
+        }
+        std::vector<std::tuple<T,float>> output;
+        for(const auto& [nodePtr,val] : bestPath) if(nodePtr) output.push_back({nodePtr->GetData(), val});
+        return output;
+    }
+    private:
+        GraphNode<T>* root;
+        std::vector<GraphNode<T>*> nodeObjects;
+        void DepthFirst(GraphNode<T>* currentNode, const T& end, float currentWeight, std::vector<GraphNode<T>*>& alreadyVisited, 
+            std::vector<std::vector<std::tuple<GraphNode<T>*, float>>>& paths, std::vector<std::tuple<GraphNode<T>*, float>> path){
+            if(currentNode == nullptr) return;
+            std::map<GraphNode<T>*, float> connectionNodes;
+            path.push_back(std::make_tuple(currentNode, currentWeight));
+            connectionNodes = currentNode->GetConnections();
+            float tempWeight = currentWeight;
+            if(currentNode->GetData() == end) paths.push_back(path);
+            else{
+                for(const auto& [key,value] : connectionNodes){
+                    if(std::find(alreadyVisited.begin(), alreadyVisited.end(), key) != alreadyVisited.end()) continue;
+                    currentWeight = tempWeight + value;
+                    alreadyVisited.push_back(key);
+                    DepthFirst(key, end, currentWeight, alreadyVisited, paths, path);
+                    alreadyVisited.pop_back();
+                }
             }
         }
 };
