@@ -1117,6 +1117,10 @@ struct GraphNode{
 };
 template <typename T>
 struct Graph{
+    /*
+        requires an adjacency list vector of strings then creates the graph based off of the given list
+        O(n^3)
+    */
     Graph(std::vector<std::string> adjacencyList){
         std::vector<std::string> nodes;
         std::stringstream stringStream(adjacencyList[0]);
@@ -1127,6 +1131,7 @@ struct Graph{
         }
         for(int i = 0; i < nodes.size(); i++) nodeObjects.push_back(new GraphNode<T>(nodes[i]));;
         root = nodeObjects[0];
+        size = nodeObjects.size();
         for(int i = 1; i < adjacencyList.size(); i++){
             nodes.clear();
             std::string token;
@@ -1152,15 +1157,13 @@ struct Graph{
             }
         }
     }
-    ~Graph(){
-        for(auto n : nodeObjects) delete n;
-    }
-    T StringTo(const std::string& data){
-        std::stringstream stringSystem(data);
-        T value;
-        stringSystem >> value;
-        return value;
-    }
+    ~Graph(){for(auto n : nodeObjects) delete n;}
+    /*
+        takes in the value of the node you want to find and returns the path to it in a vector of tuples that have T and a float, t being the value of the node and 
+        the float being the weight of the node at that stage
+
+        the method its self calls a private helper to find the path then parses it into the outputted data
+    */
     std::vector<std::tuple<T, float>> dikstras(const T end){
         std::vector<std::vector<std::tuple<GraphNode<T>*, float>>> paths;
         std::vector<GraphNode<T>*> visited;
@@ -1185,9 +1188,47 @@ struct Graph{
         for(const auto& [nodePtr,val] : bestPath) if(nodePtr) output.push_back({nodePtr->GetData(), val});
         return output;
     }
+    /*
+        calls the prims method and parses the output into a desiruble output free from containing nodes but instead their values's and weights
+        the output is a vector of tupuls with T and a float
+        its a O(n^2) method due to its call of the prims helper method
+    */
+    std::vector<std::tuple<T,float>> Prims(){
+        std::vector<std::tuple<GraphNode<T>*, float>> minSpaningTree;
+        std::vector<GraphNode<T>*> visited;
+        minSpaningTree.push_back(std::make_tuple(nodeObjects[0], 0));
+        visited.push_back(nodeObjects[0]);
+        PrimsHelper(nodeObjects[0], minSpaningTree, visited);
+        std::vector<std::tuple<T,float>> output;
+        float weight = 0;
+        for(const auto& [nodePtr,val] : minSpaningTree){
+            if(nodePtr){
+                weight = weight + val;
+                output.push_back({nodePtr->GetData(), weight});
+            }
+        }
+        return output;
+    }
     private:
         GraphNode<T>* root;
+        int size;
         std::vector<GraphNode<T>*> nodeObjects;
+        //O(n^2)
+        void PrimsHelper(GraphNode<T>* currentNode, std::vector<std::tuple<GraphNode<T>*, float>>& minSpaningTree, std::vector<GraphNode<T>*>& visited){
+            while(visited.size() != nodeObjects.size()){
+                std::map<GraphNode<T>*, float> currentConnections = currentNode->GetConnections();
+                std::tuple<GraphNode<T>*, float> bestConnection = std::make_tuple(nullptr, std::numeric_limits<float>::max());
+                for(auto node : visited)
+                for(const auto& [key,value] : node->GetConnections())
+                    if(value < std::get<1>(bestConnection) && std::find(visited.begin(), visited.end(), key) == visited.end()) bestConnection = std::make_tuple(key, value);
+                if(std::get<0>(bestConnection) != nullptr){
+                    minSpaningTree.push_back(bestConnection);
+                    currentNode = std::get<0>(bestConnection);
+                    visited.push_back(currentNode);
+                    PrimsHelper(currentNode, minSpaningTree, visited);
+                }else break;
+            }
+        }
         void DepthFirst(GraphNode<T>* currentNode, const T& end, float currentWeight, std::vector<GraphNode<T>*>& alreadyVisited, 
             std::vector<std::vector<std::tuple<GraphNode<T>*, float>>>& paths, std::vector<std::tuple<GraphNode<T>*, float>> path){
             if(currentNode == nullptr) return;
